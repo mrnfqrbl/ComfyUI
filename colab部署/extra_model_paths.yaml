@@ -1,0 +1,48 @@
+#Rename this to extra_model_paths.yaml and ComfyUI will load it
+
+
+#config for a1111 ui
+#all you have to do is change the base_path to where yours is installed
+#a111:
+#    base_path: path/to/stable-diffusion-webui/
+
+#    checkpoints: models/Stable-diffusion
+#    configs: models/Stable-diffusion
+#    vae: models/VAE
+#    loras: |
+#         models/Lora
+#         models/LyCORIS
+#    upscale_models: |
+#                  models/ESRGAN
+#                  models/RealESRGAN
+#                  models/SwinIR
+#    embeddings: embeddings
+#    hypernetworks: models/hypernetworks
+#    controlnet: models/ControlNet
+
+#config for comfyui
+#your base path should be either an existing comfy install or a central folder where you store all of your models, loras, etc.
+
+comfyui:
+     base_path: /content/drive/MyDrive/ComfyUI/  # ComfyUI 根目录
+     # You can use is_default to mark that these folders should be listed first, and used as the default dirs for eg downloads
+     #is_default: true
+     checkpoints: mx/ckpt  # 相对于 ComfyUI 根目录
+     clip: mx/clip/  # 相对于 ComfyUI 根目录
+     clip_vision: mx/clip_vision/  # 相对于 ComfyUI 根目录
+     configs: mx/configs/  # 相对于 ComfyUI 根目录
+     controlnet: mx/controlnet/  # 相对于 ComfyUI 根目录
+     diffusion_models: |
+                  mx/diffusion_models
+                  mx/unet
+     embeddings: mx/embeddings/  # 相对于 ComfyUI 根目录
+     loras: mx/lora  # 相对于 ComfyUI 根目录
+     upscale_models: mx/upscale_models/  # 相对于 ComfyUI 根目录
+     vae: mx/vae  # 相对于 ComfyUI 根目录
+
+
+#other_ui:
+#    base_path: path/to/ui
+#    checkpoints: models/checkpoints
+#    gligen: models/gligen
+#    custom_nodes: path/custom_nodes
