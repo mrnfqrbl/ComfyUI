@@ -295,9 +295,11 @@ def start_comfyui(asyncio_loop=None):
 if __name__ == "__main__":
     # Running directly, just start ComfyUI.
     logging.info("ComfyUI version: {}".format(comfyui_version.__version__))
+
     event_loop, _, start_all_func = start_comfyui()
     try:
-        event_loop.run_until_complete(start_all_func())
+        x = start_all_func()
+        event_loop.run_until_complete(x)
     except KeyboardInterrupt:
         logging.info("\nStopped server")
 
