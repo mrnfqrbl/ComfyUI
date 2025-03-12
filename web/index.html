@@ -1,35 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>ComfyUI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <script>
-    const intervalId = setInterval(() => {
-      if (window.comfyAPI && window.comfyAPI.api && window.comfyAPI.api.api) {
-        // 1. 设置 file_url (如果需要)
-        window.comfyAPI.api.api.file_url = window.location.protocol + "//" + window.comfyAPI.api.api.api_host;
-        console.log("file_url 设置成功:", window.comfyAPI.api.api.file_url);
-
-        // 2. 修改 fileURL 函数
-        window.comfyAPI.api.api.fileURL = function(route) {
-          return window.comfyAPI.api.api.file_url + route;
-        };
-        console.log("fileURL 函数已修改");
-
-        clearInterval(intervalId); // 停止定时器
-      } else {
-        console.log("等待 window.comfyAPI.api.api...");
-      }
-    }, 100); // 每 100 毫秒检查一次
-  </script>
-  <link rel="stylesheet" type="text/css" href="https://mrnfqrbl.github.io/user.css" />
-  <link rel="stylesheet" type="text/css" href="https://mrnfqrbl.github.io/materialdesignicons.min.css" />
-  <!--    <script type="module" crossorigin src="https://cdn.jsdelivr.net/gh/mrnfqrbl/ComfyUI@master/web/assets/index-DqqhYDnY.js"></script>-->
-  <script type="module" crossorigin src="https://mrnfqrbl.github.io/assets/index-DqqhYDnY.js"></script>
-  <link rel="stylesheet" crossorigin href="https://mrnfqrbl.github.io/assets/index-C1Hb_Yo9.css">
-</head>
-<body class="litegraph grid">
-<div id="vue-app"></div>
-</body>
+  <head>
+    <meta charset="UTF-8">
+    <title>ComfyUI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="user.css" />
+    <link rel="stylesheet" type="text/css" href="materialdesignicons.min.css" />
+    <script type="module" crossorigin src="./assets/index-luE7cl5Z.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-N6v3Feoi.css">
+  </head>
+  <body class="litegraph grid">
+    <div id="vue-app"></div>
+  </body>
 </html>
