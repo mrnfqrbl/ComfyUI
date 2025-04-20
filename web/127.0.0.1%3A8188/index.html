@@ -82,8 +82,6 @@
   </style>
   <script>
     let ws;
-    let info_url = "https://op.mrnf.xyz:5555/api/cd/comfyui_info";
-    let baseurl ="https://op.mrnf.xyz:5555";
     let reconnectAttempts = 0;
     const maxReconnectAttempts = 4;
     const reconnectDelayBase = 2; // 指数退避的基数
@@ -95,7 +93,7 @@
 
     const logLevels = ['info', 'debug', 'error'];
     let currentLogLevel = 'info'; // 默认级别
-     
+
     const intervalId = setInterval(() => {
       if (window.comfyAPI && window.comfyAPI.api && window.comfyAPI.api.api) {
         // 1. 设置 file_url (如果需要)
@@ -185,16 +183,17 @@
         });
 
         // 页面渲染完毕后执行的代码
-        
+        let url = "http://192.168.1.115:7878/api/cd/comfyui_info";
+        let baseurl ="http://192.168.1.115:7878"
         请求体 = {
-          "基础url": window.comfyAPI.api.api.file_url,
+          "基础url": "http://192.168.1.104:8188",
           "获取列表接口": "/api/mrnf/get",
           "下载接口": "/api/mrnf/down",
         };
 
-        async function 发起请求(info_url, 请求体) {
+        async function 发起请求(url, 请求体) {
           try {
-            const 响应 = await fetch(info_url, {
+            const 响应 = await fetch(url, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -218,7 +217,7 @@
         }
 
         // 调用发起请求函数
-        发起请求(info_url, 请求体)
+        发起请求(url, 请求体)
                 .then((数据) => {
                   // 在这里处理响应数据
 
@@ -329,9 +328,9 @@
     }
 
     async function 重新发送Post请求() {
-      
+      let url = "http://192.168.1.115:7878/api/cd/comfyui_info";
       try {
-        const 响应 = await fetch(info_url, {
+        const 响应 = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
