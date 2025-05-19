@@ -82,8 +82,9 @@
   </style>
   <script>
     let ws;
-    let info_url = "https://op.mrnf.xyz:5555/api/cd/comfyui_info";
-    let baseurl ="https://op.mrnf.xyz:5555";
+    let baseurl ="https://192.168.1.5:5555";
+    let info_url = "https://192.168.1.5:5555/api/cd/comfyui_info";
+
     let reconnectAttempts = 0;
     const maxReconnectAttempts = 4;
     const reconnectDelayBase = 2; // 指数退避的基数
