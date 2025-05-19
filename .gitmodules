@@ -46,3 +46,14 @@
 [submodule "custom_nodes/quick-connections"]
 	path = custom_nodes/quick-connections
 	url = https://github.com/niknah/quick-connections.git
+[submodule "custom_nodes/rgthree-comfy"]
+	path = custom_nodes/rgthree-comfy
+	url = https://github.com/rgthree/rgthree-comfy.git
+
+[submodule "custom_nodes/save-image-extended-comfyui"]
+	path = custom_nodes/save-image-extended-comfyui
+	url = https://github.com/audioscavenger/save-image-extended-comfyui.git
+
+[submodule "custom_nodes/ultools-comfyui"]
+	path = custom_nodes/ultools-comfyui
+	url = https://github.com/jkrauss82/ultools-comfyui.git
