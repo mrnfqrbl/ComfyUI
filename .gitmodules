@@ -1,0 +1,48 @@
+[submodule "custom_nodes/comfyui-advanced-controlnet"]
+	path = custom_nodes/comfyui-advanced-controlnet
+	url = https://github.com/Kosinkadink/ComfyUI-Advanced-ControlNet.git
+[submodule "custom_nodes/comfyui-crystools"]
+	path = custom_nodes/comfyui-crystools
+	url = https://github.com/crystian/ComfyUI-Crystools.git
+[submodule "custom_nodes/comfyui-filepathcreator"]
+	path = custom_nodes/comfyui-filepathcreator
+	url = https://github.com/HECer/ComfyUI-FilePathCreator.git
+[submodule "custom_nodes/comfyui-fluxtrainer"]
+	path = custom_nodes/comfyui-fluxtrainer
+	url = https://github.com/kijai/ComfyUI-FluxTrainer.git
+[submodule "custom_nodes/comfyui-image-saver"]
+	path = custom_nodes/comfyui-image-saver
+	url = https://github.com/alexopus/ComfyUI-Image-Saver.git
+[submodule "custom_nodes/comfyui-impact-pack"]
+	path = custom_nodes/comfyui-impact-pack
+	url = https://github.com/ltdrdata/ComfyUI-Impact-Pack.git
+[submodule "custom_nodes/comfyui-inpaint-nodes"]
+	path = custom_nodes/comfyui-inpaint-nodes
+	url = https://github.com/Acly/comfyui-inpaint-nodes.git
+[submodule "custom_nodes/ComfyUI-Manager"]
+	path = custom_nodes/ComfyUI-Manager
+	url = https://github.com/ltdrdata/ComfyUI-Manager.git
+[submodule "custom_nodes/comfyui-openpose"]
+	path = custom_nodes/comfyui-openpose
+	url = https://github.com/alessandrozonta/ComfyUI-OpenPose.git
+[submodule "custom_nodes/comfyui-openpose-editor"]
+	path = custom_nodes/comfyui-openpose-editor
+	url = https://github.com/huchenlei/ComfyUI-openpose-editor.git
+[submodule "custom_nodes/comfyui-openpose-keypoint-extractor"]
+	path = custom_nodes/comfyui-openpose-keypoint-extractor
+	url = https://github.com/hughescr/ComfyUI-OpenPose-Keypoint-Extractor.git
+[submodule "custom_nodes/comfyui-tensorops"]
+	path = custom_nodes/comfyui-tensorops
+	url = https://github.com/un-seen/comfyui-tensorops.git
+[submodule "custom_nodes/loadlorawithtags"]
+	path = custom_nodes/loadlorawithtags
+	url = https://github.com/Extraltodeus/LoadLoraWithTags.git
+[submodule "custom_nodes/lora-assistant"]
+	path = custom_nodes/lora-assistant
+	url = https://github.com/Bellzs/ComfyUI-LoRA-Assistant.git
+[submodule "custom_nodes/mrnf"]
+	path = custom_nodes/mrnf
+	url = https://github.com/mrnfqrbl/comfyui_mrnf_nodes.git
+[submodule "custom_nodes/quick-connections"]
+	path = custom_nodes/quick-connections
+	url = https://github.com/niknah/quick-connections.git
