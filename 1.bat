@@ -1,7 +1,7 @@
 @echo on
 chcp 65001
-set PYTHONUNBUFFERED=1
-set PYTHONUTF8=1
+::set PYTHONUNBUFFERED=1
+::set PYTHONUTF8=1
 cd /d I:\我的云端硬盘\ComfyUI
 
 echo -= 检查是否需要安装依赖 =-
