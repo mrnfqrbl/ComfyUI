@@ -96,10 +96,11 @@ app.registerExtension({
 						}
 					}
 					if (slotType == 2 && !isChangeConnect) {
-						this.outputs[slot].type = '*';
-						this.outputs[slot].name = '*';
-						
-					}	
+						if (this.outputs && this.outputs[slot]) {
+							this.outputs[slot].type = '*';
+							this.outputs[slot].name = '*';
+						}
+					}
 					//On Connect
 					if (link_info && node.graph && slotType == 1 && isChangeConnect) {
 						const fromNode = node.graph._nodes.find((otherNode) => otherNode.id == link_info.origin_id);
@@ -449,7 +450,7 @@ app.registerExtension({
 					if (this.outputs[0].type !== '*' && this.outputs[0].links) {
 						this.outputs[0].links.filter(linkId => {
 							const link = node.graph.links[linkId];
-							return link && (link.type !== this.outputs[0].type && link.type !== '*');
+							return link && (!link.type.split(",").includes(this.outputs[0].type) && link.type !== '*');
 						}).forEach(linkId => {
 							node.graph.removeLink(linkId);
 						});

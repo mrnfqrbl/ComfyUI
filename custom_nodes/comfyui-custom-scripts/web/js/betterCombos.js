@@ -74,7 +74,7 @@ app.registerExtension({
 		const displayOptions = { "List (normal)": 0, "Tree (subfolders)": 1, "Thumbnails (grid)": 2 };
 		const displaySetting = app.ui.settings.addSetting({
 			id: "pysssss.Combo++.Submenu",
-			name: "🐍 Lora/Checkpoint loader display mode",
+			name: "🐍 Lora & Checkpoint loader display mode",
 			defaultValue: 1,
 			type: "combo",
 			options: (value) => {
@@ -196,7 +196,7 @@ app.registerExtension({
 				await p2;
 			} catch (error) {
 				console.error(error);
-				console.error("Error loading pysssss.betterCombos data")
+				console.error("Error loading pysssss.betterCombos data");
 			}
 
 			// Clamp max height so it doesn't overflow the screen
@@ -335,7 +335,7 @@ app.registerExtension({
 					}
 				};
 
-				insertFolderStructure(items[0].parentElement, folderMap);
+				insertFolderStructure(items[0]?.parentElement || menu, folderMap);
 				positionMenu(menu);
 			};
 
@@ -469,7 +469,11 @@ app.registerExtension({
 				const modelCb = modelWidget.callback;
 				let prev = undefined;
 				modelWidget.callback = function () {
-					const ret = modelCb?.apply(this, arguments) ?? modelWidget.value;
+					let ret = modelCb?.apply(this, arguments) ?? modelWidget.value;
+					if (typeof ret === "object" && "content" in ret) {
+						ret = ret.content;
+						modelWidget.value = ret;
+					}
 					let v = ret;
 					if (prev !== v) {
 						listExamples();

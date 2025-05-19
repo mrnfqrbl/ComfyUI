@@ -66,7 +66,7 @@ class FloatConstant:
     CATEGORY = "KJNodes/constants"
 
     def get_value(self, value):
-        return (value,)
+        return (round(value, 6),)
 
 class StringConstant:
     @classmethod
@@ -1017,6 +1017,23 @@ SVD:
         interped_ys = np.exp(new_ys)[::-1].copy()
         interped_ys_tensor = torch.tensor(interped_ys)
         return interped_ys_tensor
+    
+class StringToFloatList:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required":
+                    {
+                     "string" :("STRING", {"default": "1, 2, 3", "multiline": True}),
+                     }
+                }
+    RETURN_TYPES = ("FLOAT",)
+    RETURN_NAMES = ("FLOAT",)
+    CATEGORY = "KJNodes/misc"
+    FUNCTION = "createlist"
+
+    def createlist(self, string):
+        float_list = [float(x.strip()) for x in string.split(',')]
+        return (float_list,)
 
  
 class InjectNoiseToLatent:
@@ -1632,6 +1649,7 @@ or a .txt file with RealEstate camera intrinsics and coordinates, in a 3D plot.
         return (tensor_img,)
 
     def extrinsic2pyramid(self, extrinsic, color_map='red', hw_ratio=1/1, base_xval=1, zval=3):
+        import matplotlib.pyplot as plt
         from mpl_toolkits.mplot3d.art3d import Poly3DCollection
         vertex_std = np.array([[0, 0, 0, 1],
                             [base_xval, -base_xval * hw_ratio, zval, 1],
@@ -2286,7 +2304,7 @@ class LeapfusionHunyuanI2V:
                 else:
                     for i in range(len(steps) - 1):
                         # walk from beginning of steps until crossing the timestep
-                        if (steps[i] - timestep) * (steps[i + 1] - timestep) <= 0:
+                        if (steps[i] - timestep[0]) * (steps[i + 1] - timestep[0]) <= 0:
                             current_step_index = i
                             break
                     else:
@@ -2448,7 +2466,7 @@ class Guider_ScheduledCFG(CFGGuider):
         else:
             for i in range(len(steps) - 1):
                 # walk from beginning of steps until crossing the timestep
-                if (steps[i] - timestep) * (steps[i + 1] - timestep) <= 0:
+                if (steps[i] - timestep[0]) * (steps[i + 1] - timestep[0]) <= 0:
                     current_step_index = i
                     break
             else:
@@ -2644,4 +2662,68 @@ class TimerNodeKJ:
             timer.start_time = None
             return (any_input, timer, timer.elapsed)
 
-        
+class HunyuanVideoEncodeKeyframesToCond:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {"required": {
+                    "model": ("MODEL",),
+                    "positive": ("CONDITIONING", ),
+                    "vae": ("VAE", ),
+                    "start_frame": ("IMAGE", ),
+                    "end_frame": ("IMAGE", ),
+                    "num_frames": ("INT", {"default": 33, "min": 2, "max": 4096, "step": 1}),
+                    "tile_size": ("INT", {"default": 512, "min": 64, "max": 4096, "step": 64}),
+                    "overlap": ("INT", {"default": 64, "min": 0, "max": 4096, "step": 32}),
+                    "temporal_size": ("INT", {"default": 64, "min": 8, "max": 4096, "step": 4, "tooltip": "Only used for video VAEs: Amount of frames to encode at a time."}),
+                    "temporal_overlap": ("INT", {"default": 8, "min": 4, "max": 4096, "step": 4, "tooltip": "Only used for video VAEs: Amount of frames to overlap."}),
+                    },
+                    "optional": {
+                        "negative": ("CONDITIONING", ),
+                    }
+                }
+
+    RETURN_TYPES = ("MODEL", "CONDITIONING","CONDITIONING","LATENT")
+    RETURN_NAMES = ("model", "positive", "negative", "latent")
+    FUNCTION = "encode"
+
+    CATEGORY = "KJNodes/videomodels"
+
+    def encode(self, model, positive, start_frame, end_frame, num_frames, vae, tile_size, overlap, temporal_size, temporal_overlap, negative=None):
+
+        model_clone = model.clone()
+
+        model_clone.add_object_patch("concat_keys", ("concat_image",))
+
+       
+        x = (start_frame.shape[1] // 8) * 8
+        y = (start_frame.shape[2] // 8) * 8
+
+        if start_frame.shape[1] != x or start_frame.shape[2] != y:
+            x_offset = (start_frame.shape[1] % 8) // 2
+            y_offset = (start_frame.shape[2] % 8) // 2
+            start_frame = start_frame[:,x_offset:x + x_offset, y_offset:y + y_offset,:]
+        if end_frame.shape[1] != x or end_frame.shape[2] != y:
+            x_offset = (start_frame.shape[1] % 8) // 2
+            y_offset = (start_frame.shape[2] % 8) // 2
+            end_frame = end_frame[:,x_offset:x + x_offset, y_offset:y + y_offset,:]
+
+        video_frames = torch.zeros(num_frames-2, start_frame.shape[1], start_frame.shape[2], start_frame.shape[3], device=start_frame.device, dtype=start_frame.dtype)
+        video_frames = torch.cat([start_frame, video_frames, end_frame], dim=0)
+
+        concat_latent = vae.encode_tiled(video_frames[:,:,:,:3], tile_x=tile_size, tile_y=tile_size, overlap=overlap, tile_t=temporal_size, overlap_t=temporal_overlap)
+
+        out_latent = {}
+        out_latent["samples"] = torch.zeros_like(concat_latent)
+
+        out = []
+        for conditioning in [positive, negative if negative is not None else []]:
+            c = []
+            for t in conditioning:
+                d = t[1].copy()
+                d["concat_latent_image"] = concat_latent
+                n = [t[0], d]
+                c.append(n)
+            out.append(c)
+        if len(out) == 1:
+            out.append(out[0])
+        return (model_clone, out[0], out[1], out_latent)      

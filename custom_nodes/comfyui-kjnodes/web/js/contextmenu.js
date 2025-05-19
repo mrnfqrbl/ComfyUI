@@ -48,18 +48,39 @@ app.registerExtension({
 		}
 	},
 		async setup(app) {
-			const onChange = (value) => {
-				if (value) {
-					const valuesToAddToIn = ["GetNode"];
-					const valuesToAddToOut = ["SetNode"];
+			const updateSlots = (value) => {
+				const valuesToAddToIn = ["GetNode"];
+				const valuesToAddToOut = ["SetNode"];
+				// Remove entries if they exist
+				for (const arr of Object.values(LiteGraph.slot_types_default_in)) {
+					for (const valueToAdd of valuesToAddToIn) {
+						const idx = arr.indexOf(valueToAdd);
+						if (idx !== -1) {
+							arr.splice(idx, 1);
+						}
+					}
+				}
 			
+				for (const arr of Object.values(LiteGraph.slot_types_default_out)) {
+					for (const valueToAdd of valuesToAddToOut) {
+						const idx = arr.indexOf(valueToAdd);
+						if (idx !== -1) {
+							arr.splice(idx, 1);
+						}
+					}
+				}
+				if (value!="disabled") {
 					for (const arr of Object.values(LiteGraph.slot_types_default_in)) {
 						for (const valueToAdd of valuesToAddToIn) {
 							const idx = arr.indexOf(valueToAdd);
 							if (idx !== -1) {
 								arr.splice(idx, 1);
 							}
-							arr.unshift(valueToAdd);
+							if (value === "top") {
+								arr.unshift(valueToAdd);
+							} else {
+								arr.push(valueToAdd);
+							}
 						}
 					}
 			
@@ -69,7 +90,11 @@ app.registerExtension({
 							if (idx !== -1) {
 								arr.splice(idx, 1);
 							}
-							arr.unshift(valueToAdd);
+							if (value === "top") {
+								arr.unshift(valueToAdd);
+							} else {
+								arr.push(valueToAdd);
+							}
 						}
 					}
 				}
@@ -77,10 +102,12 @@ app.registerExtension({
 			
 			app.ui.settings.addSetting({
 				id: "KJNodes.SetGetMenu",
-				name: "KJNodes: Make Set/Get -nodes defaults (turn off and reload to disable)",
-				defaultValue: false,
-				type: "boolean",
-				onChange: onChange,
+				name: "KJNodes: Make Set/Get -nodes defaults",
+				tooltip: 'Adds Set/Get nodes to the top or bottom of the list of available node suggestions.',
+				options: ['disabled', 'top', 'bottom'],
+				defaultValue: 'disabled',
+				type: "combo",
+				onChange: updateSlots,
 				
 			});
 			app.ui.settings.addSetting({

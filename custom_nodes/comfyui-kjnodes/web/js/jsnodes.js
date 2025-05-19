@@ -10,23 +10,26 @@ app.registerExtension({
 		switch (nodeData.name) {
 			case "ConditioningMultiCombine":
 				nodeType.prototype.onNodeCreated = function () {
-				this.cond_type = "CONDITIONING"
+				this._type = "CONDITIONING"
 				this.inputs_offset = nodeData.name.includes("selective")?1:0
 				this.addWidget("button", "Update inputs", null, () => {
 					if (!this.inputs) {
 						this.inputs = [];
 					}
 					const target_number_of_inputs = this.widgets.find(w => w.name === "inputcount")["value"];
-					    if(target_number_of_inputs===this.inputs.length)return; // already set, do nothing
+					const num_inputs = this.inputs.filter(input => input.type === this._type).length
+					if(target_number_of_inputs===num_inputs)return; // already set, do nothing
 
-					    if(target_number_of_inputs < this.inputs.length){
-    						for(let i = this.inputs.length; i>=this.inputs_offset+target_number_of_inputs; i--)
-							      this.removeInput(i)
-					    }
-                        else{
-						    for(let i = this.inputs.length+1-this.inputs_offset; i <= target_number_of_inputs; ++i)
-						    	this.addInput(`conditioning_${i}`, this.cond_type)
-                        }
+					if(target_number_of_inputs < num_inputs){
+						const inputs_to_remove = num_inputs - target_number_of_inputs;
+						for(let i = 0; i < inputs_to_remove; i++) {
+							this.removeInput(this.inputs.length - 1);
+						}
+					}
+					else{
+						for(let i = num_inputs+1; i <= target_number_of_inputs; ++i)
+							this.addInput(`conditioning_${i}`, this._type)
+					}
 					});
 				}
 				break;
@@ -37,45 +40,50 @@ app.registerExtension({
 			case "TransitionImagesMulti":
 				nodeType.prototype.onNodeCreated = function () {
 				this._type = "IMAGE"
-				this.inputs_offset = nodeData.name.includes("selective")?1:0
 				this.addWidget("button", "Update inputs", null, () => {
 					if (!this.inputs) {
 						this.inputs = [];
 					}
 					const target_number_of_inputs = this.widgets.find(w => w.name === "inputcount")["value"];
-						if(target_number_of_inputs===this.inputs.length)return; // already set, do nothing
+					const num_inputs = this.inputs.filter(input => input.type === this._type).length
+					if(target_number_of_inputs===num_inputs)return; // already set, do nothing
 
-						if(target_number_of_inputs < this.inputs.length){
-							for(let i = this.inputs.length; i>=this.inputs_offset+target_number_of_inputs; i--)
-									this.removeInput(i)
+					if(target_number_of_inputs < num_inputs){
+						const inputs_to_remove = num_inputs - target_number_of_inputs;
+						for(let i = 0; i < inputs_to_remove; i++) {
+							this.removeInput(this.inputs.length - 1);
 						}
-						else{
-							for(let i = this.inputs.length+1-this.inputs_offset; i <= target_number_of_inputs; ++i)
-								this.addInput(`image_${i}`, this._type)
-						}
+					}
+					else{
+						for(let i = num_inputs+1; i <= target_number_of_inputs; ++i)
+							this.addInput(`image_${i}`, this._type)
+					}
+					
 					});
 				}
 				break;
 			case "MaskBatchMulti":
 				nodeType.prototype.onNodeCreated = function () {
 				this._type = "MASK"
-				this.inputs_offset = nodeData.name.includes("selective")?1:0
 				this.addWidget("button", "Update inputs", null, () => {
 					if (!this.inputs) {
 						this.inputs = [];
 					}
 					const target_number_of_inputs = this.widgets.find(w => w.name === "inputcount")["value"];
-						if(target_number_of_inputs===this.inputs.length)return; // already set, do nothing
+					const num_inputs = this.inputs.filter(input => input.type === this._type).length
+					if(target_number_of_inputs===num_inputs)return; // already set, do nothing
 
-						if(target_number_of_inputs < this.inputs.length){
-							for(let i = this.inputs.length; i>=this.inputs_offset+target_number_of_inputs; i--)
-									this.removeInput(i)
+					if(target_number_of_inputs < num_inputs){
+						const inputs_to_remove = num_inputs - target_number_of_inputs;
+						for(let i = 0; i < inputs_to_remove; i++) {
+							this.removeInput(this.inputs.length - 1);
 						}
-						else{
-							for(let i = this.inputs.length+1-this.inputs_offset; i <= target_number_of_inputs; ++i)
-								this.addInput(`mask_${i}`, this._type)
-							}
-						});
+					}
+					else{
+						for(let i = num_inputs+1; i <= target_number_of_inputs; ++i)
+							this.addInput(`mask_${i}`, this._type)
+					}
+					});
 					}
 					break;
 			
@@ -222,20 +230,23 @@ app.registerExtension({
 					originalOnNodeCreated.apply(this, arguments);
 			
 					this._type = "STRING";
-					this.inputs_offset = nodeData.name.includes("selective") ? 1 : 0;
 					this.addWidget("button", "Update inputs", null, () => {
 						if (!this.inputs) {
 							this.inputs = [];
 						}
 						const target_number_of_inputs = this.widgets.find(w => w.name === "inputcount")["value"];
-						if (target_number_of_inputs === this.inputs.length) return; // already set, do nothing
+						const num_inputs = this.inputs.filter(input => input.name && input.name.toLowerCase().includes("string_")).length
+						if (target_number_of_inputs === num_inputs) return; // already set, do nothing
 			
-						if (target_number_of_inputs < this.inputs.length) {
-							for (let i = this.inputs.length; i >= this.inputs_offset + target_number_of_inputs; i--)
-								this.removeInput(i);
-						} else {
-							for (let i = this.inputs.length + 1 - this.inputs_offset; i <= target_number_of_inputs; ++i)
-								this.addInput(`string_${i}`, this._type);
+						if(target_number_of_inputs < num_inputs){
+							const inputs_to_remove = num_inputs - target_number_of_inputs;
+							for(let i = 0; i < inputs_to_remove; i++) {
+								this.removeInput(this.inputs.length - 1);
+							}
+						}
+						else{
+							for(let i = num_inputs+1; i <= target_number_of_inputs; ++i)
+								this.addInput(`string_${i}`, this._type)
 						}
 					});
 				}
