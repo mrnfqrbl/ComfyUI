@@ -1,1 +1,0 @@
-Conversion utility for compatibility with other extensions (AD, IPA, Fitz are using FLOAT to represent list of floats.)

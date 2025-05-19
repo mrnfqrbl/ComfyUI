@@ -1,1 +1,0 @@
-Split the components of a bbox

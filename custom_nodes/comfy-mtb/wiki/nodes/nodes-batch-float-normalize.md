@@ -1,1 +1,0 @@
-Normalize the values in the list of floats

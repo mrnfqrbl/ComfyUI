@@ -1,1 +1,0 @@
-Convert a FLOAT_CURVE to a FLOAT or FLOATS

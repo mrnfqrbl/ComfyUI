@@ -1,1 +1,0 @@
-Remap a batch using a time curve (FLOATS)
