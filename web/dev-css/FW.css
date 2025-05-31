@@ -1,0 +1,73 @@
+
+#messageOverlay {
+    position: fixed;
+    background-color: rgba(34, 49, 63, 0.6); /* 深色半透明背景 */
+    color: #ECF0F1; /* 高对比度亮色字体 */
+    padding: 5px; /* 减少内边距 */
+    border-radius: 5px; /* 减少圆角 */
+    cursor: move;
+    z-index: 10000;
+    opacity: 1;
+    font-size: 12px; /* 调整字体大小 */
+    width: 350px; /* 设置固定宽度 */
+    height: 185px; /* 限制最大高度 */
+    overflow-y: auto; /* 允许垂直滚动 */
+    pointer-events: auto; /* 默认允许点击 */
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    line-height: 1.2; /* 调整行高 */
+    word-break: break-word; /* 允许长单词换行 */
+}
+
+#messageOverlay.through {
+    pointer-events: none; /* 穿透模式 */
+    background-color: rgba(52, 73, 94, 0.3); /* 穿透时颜色更淡 */
+    opacity: 0.5;
+}
+
+#messageOverlay:hover {
+    background-color: rgba(44, 62, 80, 0.7); /* 悬停时颜色加深 */
+}
+
+#messageOverlay.through:hover {
+    background-color: rgba(52, 73, 94, 0.5); /* 悬停时颜色加深 */
+}
+
+#messageOverlay #toggleThrough {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background-color: rgba(236, 240, 241, 0.2);
+    color: #ECF0F1;
+    border: none;
+    padding: 1px 3px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 10px;
+    outline: none;
+    pointer-events: auto; /* 确保按钮可以被点击 */
+}
+
+#messageOverlay #toggleThrough:hover {
+    background-color: rgba(236, 240, 241, 0.4);
+}
+
+.messageLine {
+    margin-bottom: 3px; /* 消息之间的间距 */
+}
+
+.messageLine.error {
+    color: red;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#connectionError {
+    color: red;
+    font-size: 16px;
+    font-weight: bold;
+    display: none; /* 初始隐藏 */
+}
+
+#levelFilter {
+    margin-top: 5px;
+}
