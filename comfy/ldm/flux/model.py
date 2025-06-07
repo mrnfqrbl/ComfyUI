@@ -101,6 +101,10 @@ class Flux(nn.Module):
         transformer_options={},
         attn_mask: Tensor = None,
     ) -> Tensor:
+
+        if y is None:
+            y = torch.zeros((img.shape[0], self.params.vec_in_dim), device=img.device, dtype=img.dtype)
+
         patches_replace = transformer_options.get("patches_replace", {})
         if img.ndim != 3 or txt.ndim != 3:
             raise ValueError("Input img and txt tensors must have 3 dimensions.")
@@ -115,8 +119,11 @@ class Flux(nn.Module):
         vec = vec + self.vector_in(y[:,:self.params.vec_in_dim])
         txt = self.txt_in(txt)
 
-        ids = torch.cat((txt_ids, img_ids), dim=1)
-        pe = self.pe_embedder(ids)
+        if img_ids is not None:
+            ids = torch.cat((txt_ids, img_ids), dim=1)
+            pe = self.pe_embedder(ids)
+        else:
+            pe = None
 
         blocks_replace = patches_replace.get("dit", {})
         for i, block in enumerate(self.double_blocks):
@@ -185,7 +192,7 @@ class Flux(nn.Module):
         img = self.final_layer(img, vec)  # (N, T, patch_size ** 2 * out_channels)
         return img
 
-    def forward(self, x, timestep, context, y, guidance=None, control=None, transformer_options={}, **kwargs):
+    def forward(self, x, timestep, context, y=None, guidance=None, control=None, transformer_options={}, **kwargs):
         bs, c, h, w = x.shape
         patch_size = self.patch_size
         x = comfy.ldm.common_dit.pad_to_patch_size(x, (patch_size, patch_size))

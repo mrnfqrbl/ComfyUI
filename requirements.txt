@@ -1,4 +1,6 @@
-#comfyui-frontend-package==1.11.8
+#comfyui-frontend-package==1.21.7
+comfyui-workflow-templates==0.1.25
+comfyui-embedded-docs==0.2.0
 torch
 torchsde
 torchvision
@@ -21,4 +23,5 @@ psutil
 kornia>=0.7.1
 spandrel
 soundfile
-av
+av>=14.2.0
+pydantic~=2.0
