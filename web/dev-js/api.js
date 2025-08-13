@@ -1,5 +1,43 @@
-// api-manager.js (API 请求模块)
+
+// api-.js (API 请求模块)
 let 请求体; // 保存请求体，用于重新发送
+let wsBaseUrl;
+
+
+// 新增：配置中心（支持前后端分离预留）
+const API_CONFIG = {
+    // 未来前后端分离时，可配置为后端服务地址（如"https://api.yourdomain.com/"）
+    backendBaseUrl: "",
+    // WebSocket服务地址（可选，默认使用backendBaseUrl）
+    wsBaseUrl: ""
+};
+
+// 新增：动态获取基准路径（兼容代理和非代理场景）
+function getBaseUrl() {
+    // 1. 优先使用显式配置的后端地址（前后端分离场景）
+    if (API_CONFIG.backendBaseUrl) {
+        return formatUrl(API_CONFIG.backendBaseUrl);
+    }
+
+    // 2. 其次使用base标签（代理场景）
+    const baseTag = document.querySelector('base');
+    if (baseTag) {
+        return formatUrl(baseTag.href);
+    }
+
+    // 3. 最后使用comfyAPI的api_host（原有逻辑，兼容非代理场景）
+    return formatUrl(window.location.protocol + "//" + window.comfyAPI.api.api.api_host);
+}
+
+// 新增：URL格式化工具（确保路径以斜杠结尾）
+function formatUrl(url) {
+    // return url.endsWith('/') ? url : url + '/';
+    if (url[url.length - 1] === '/') {
+        return url.slice(0, -1);
+    }
+    return url;
+}
+
 
 async function resendPostRequest() {
     try {
@@ -56,7 +94,9 @@ function initialize() {
     let intervalId = setInterval(() => {
         if (window.comfyAPI && window.comfyAPI.api && window.comfyAPI.api.api) {
             // 1. 设置 file_url (如果需要)
-            window.comfyAPI.api.api.file_url = window.location.protocol + "//" + window.comfyAPI.api.api.api_host;
+            baseurl = getBaseUrl();
+            window.comfyAPI.api.api.file_url = baseurl;
+
             console.log("file_url 设置成功:", window.comfyAPI.api.api.file_url);
 
             // 2. 修改 fileURL 函数
@@ -100,8 +140,16 @@ function initialize() {
         } else {
             console.log("等待 window.comfyAPI.api.api...");
         }
-    }, 100); // 每 100 毫秒检查一次
+    }, 300); // 每 100 毫秒检查一次
 }
 
 // 在 ComfyUI 页面加载完成后调用初始化函数
 initialize();
+// 新增：暴露配置接口（方便未来动态修改）
+window.API_CONFIG = API_CONFIG;
+window.updateBackendBaseUrl = function(newUrl) {
+    API_CONFIG.backendBaseUrl = newUrl;
+    // 如需立即生效，可在这里重新初始化相关配置
+};
+
+
